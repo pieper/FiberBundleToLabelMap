@@ -197,7 +197,7 @@ class FiberBundleToLabelMapLogic:
       return False
     return True
 
-  def rasterizeFibers(self,fiberNode,labelNode):
+  def rasterizeFibers(self,fiberNode,labelNode,labelValue=1):
     """Trace through the given fiber bundles and 
     set the corresponding pixels in the given labelNode volume"""
     print('rasterizing...')
@@ -213,13 +213,12 @@ class FiberBundleToLabelMapLogic:
       ijk = [int(round(element)) for element in ijkFloat]
       ijk.reverse()
       try:
-        labelArray[tuple(ijk)] = 1
+        labelArray[tuple(ijk)] = labelValue
       except IndexError:
         pass
     labelNode.GetImageData().Modified()
     labelNode.Modified()
     print('finished')
-
 
 
 class FiberBundleToLabelMapTest(unittest.TestCase):
@@ -304,7 +303,7 @@ class FiberBundleToLabelMapTest(unittest.TestCase):
     selectionNode.SetReferenceActiveLabelVolumeID( labelNode.GetID() )
     self.applicationLogic.PropagateVolumeSelection(0)
 
-    logic.rasterizeFibers(fiberNode, labelNode)
+    logic.rasterizeFibers(fiberNode, labelNode, labelValue=10)
 
     self.assertTrue( logic.hasImageData(labelNode) )
     self.delayDisplay('Test passed!')

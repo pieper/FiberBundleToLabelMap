@@ -105,6 +105,12 @@ class FiberBundleToLabelMapWidget:
     self.labelSelector.setToolTip( "Pick the target label volume." )
     parametersFormLayout.addRow("Target LabelMap", self.labelSelector)
 
+    # label value
+    self.labelValue = qt.QSpinBox(parametersCollapsibleButton)
+    self.labelValue.setToolTip( "The numerical value for the rasterized fiber label." )
+    self.labelValue.setValue(1)
+    parametersFormLayout.addRow("Label Value", self.labelValue)
+
     # apply
     self.applyButton = qt.QPushButton(parametersCollapsibleButton)
     self.applyButton.text = "Apply"
@@ -122,8 +128,7 @@ class FiberBundleToLabelMapWidget:
       qt.QMessageBox.critical(slicer.util.mainWindow(), 'FiberBundleToLabelMap', "Must select fiber bundle and label map")
 
     logic = FiberBundleToLabelMapLogic()
-    logic.rasterizeFibers(fiberNode, labelNode)
-
+    logic.rasterizeFibers(fiberNode, labelNode, self.labelValue.value)
 
   def onReload(self,moduleName="FiberBundleToLabelMap"):
     """Generic reload method for any scripted module.
